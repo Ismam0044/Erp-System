@@ -10,7 +10,7 @@ class PurchaseInvoiceItemInline(admin.TabularInline):
 
 @admin.register(PurchaseInvoice)
 class PurchaseInvoiceAdmin(admin.ModelAdmin):
-    list_display = ("invoice_no", "warehouse", "supplier", "date", "total", "paid_amount", "status")
-    list_filter = ("warehouse", "status", "date")
+    list_display = ("invoice_no", "warehouse", "supplier", "date", "total", "paid_amount", "payment_mode", "status")
+    list_filter = ("warehouse", "status", "payment_mode", "date")
     search_fields = ("invoice_no", "supplier__name")
     inlines = [PurchaseInvoiceItemInline]

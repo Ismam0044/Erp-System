@@ -7,6 +7,7 @@ from django.views.decorators.http import require_POST
 
 from core.cart import SessionCart
 from core.models import Warehouse
+from core.utils import resolve_warehouse
 from inventory.models import Item, Stock
 from parties.models import Party
 
@@ -25,7 +26,7 @@ def _accessible_warehouses(user):
 def _current_warehouse(request):
     warehouses = _accessible_warehouses(request.user)
     warehouse_id = request.session.get("pos_warehouse_id")
-    warehouse = warehouses.filter(pk=warehouse_id).first() if warehouse_id else None
+    warehouse = resolve_warehouse(warehouses, warehouse_id)
     return warehouse or warehouses.first()
 
 
@@ -56,7 +57,7 @@ def pos(request):
 def set_warehouse(request):
     warehouse_id = request.GET.get("warehouse_id") or request.POST.get("warehouse_id")
     warehouses = _accessible_warehouses(request.user)
-    warehouse = warehouses.filter(pk=warehouse_id).first()
+    warehouse = resolve_warehouse(warehouses, warehouse_id)
     if warehouse:
         request.session["pos_warehouse_id"] = warehouse.id
     return item_search(request)

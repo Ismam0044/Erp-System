@@ -8,6 +8,7 @@ from django.views.decorators.http import require_POST
 
 from accounts.models import Voucher
 from core.models import Warehouse
+from core.utils import resolve_warehouse
 
 from .models import LedgerEntry, Party
 
@@ -54,7 +55,7 @@ def party_detail(request, pk):
 def record_transaction(request, pk):
     party = get_object_or_404(Party, pk=pk)
     warehouses = _accessible_warehouses(request.user)
-    warehouse = warehouses.filter(pk=request.POST.get("warehouse_id")).first() or warehouses.first()
+    warehouse = resolve_warehouse(warehouses, request.POST.get("warehouse_id")) or warehouses.first()
 
     try:
         amount = Decimal(request.POST.get("amount") or "0")

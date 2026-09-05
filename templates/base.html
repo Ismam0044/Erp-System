@@ -39,8 +39,16 @@
             <a href="{% url 'parties:list' %}" class="sidebar-link {% if request.resolver_match.app_name == 'parties' %}active{% endif %}">
                 <i class="bi bi-people"></i> Parties &amp; Ledger
             </a>
+            <a href="{% url 'accounts:cash_book' %}" class="sidebar-link {% if request.resolver_match.app_name == 'accounts' %}active{% endif %}">
+                <i class="bi bi-journal-text"></i> Cash Book
+            </a>
             <a href="/admin/inventory/item/" class="sidebar-link">
                 <i class="bi bi-box-seam"></i> Items &amp; Stock
+            </a>
+
+            <div class="sidebar-section">Reports</div>
+            <a href="{% url 'reports:index' %}" class="sidebar-link {% if request.resolver_match.app_name == 'reports' %}active{% endif %}">
+                <i class="bi bi-bar-chart"></i> Reports
             </a>
 
             <div class="sidebar-section">System</div>

@@ -1,6 +1,7 @@
 from django.db import transaction
 from django.utils import timezone
 
+from accounts.models import CashBookEntry
 from inventory.models import Item, Stock
 from parties.models import LedgerEntry
 
@@ -63,6 +64,18 @@ def complete_sale(*, warehouse, party, payment_type, paid_amount, discount, cart
             amount=abs(due),
             reference=invoice.invoice_no,
             description=f"Sales invoice {invoice.invoice_no}",
+            created_by=user,
+        )
+
+    if payment_type == SalesInvoice.PaymentType.CASH and paid_amount > 0:
+        CashBookEntry.objects.create(
+            warehouse=warehouse,
+            date=invoice.date,
+            entry_type=CashBookEntry.EntryType.IN,
+            amount=paid_amount,
+            category="Sales",
+            reference=invoice.invoice_no,
+            description=f"Sale {invoice.invoice_no}" + (f" ({party.name})" if party else ""),
             created_by=user,
         )
 

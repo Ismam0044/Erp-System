@@ -1,6 +1,7 @@
 from django.db import transaction
 from django.utils import timezone
 
+from accounts.models import CashBookEntry
 from inventory.models import Item, Stock
 from parties.models import LedgerEntry
 
@@ -14,7 +15,7 @@ def generate_invoice_no(warehouse):
 
 
 @transaction.atomic
-def complete_purchase(*, warehouse, supplier, paid_amount, discount, cart, user):
+def complete_purchase(*, warehouse, supplier, paid_amount, discount, cart, user, payment_mode=PurchaseInvoice.PaymentMode.CASH):
     if len(cart) == 0:
         raise ValueError("Cart is empty.")
 
@@ -30,6 +31,7 @@ def complete_purchase(*, warehouse, supplier, paid_amount, discount, cart, user)
         discount=discount,
         total=total,
         paid_amount=paid_amount,
+        payment_mode=payment_mode,
         status=PurchaseInvoice.Status.CONFIRMED,
         created_by=user,
     )
@@ -55,6 +57,18 @@ def complete_purchase(*, warehouse, supplier, paid_amount, discount, cart, user)
             amount=abs(due),
             reference=invoice.invoice_no,
             description=f"Purchase invoice {invoice.invoice_no}",
+            created_by=user,
+        )
+
+    if payment_mode == PurchaseInvoice.PaymentMode.CASH and paid_amount > 0:
+        CashBookEntry.objects.create(
+            warehouse=warehouse,
+            date=invoice.date,
+            entry_type=CashBookEntry.EntryType.OUT,
+            amount=paid_amount,
+            category="Purchase",
+            reference=invoice.invoice_no,
+            description=f"Payment for purchase {invoice.invoice_no} ({supplier.name})",
             created_by=user,
         )
 
