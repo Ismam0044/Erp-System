@@ -35,5 +35,13 @@ class User(AbstractUser):
             return True
         return self.assigned_warehouses.filter(pk=warehouse.pk).exists()
 
+    def save(self, *args, **kwargs):
+        # createsuperuser doesn't know about our custom role field, so it would
+        # otherwise leave superusers on the CASHIER default. A superuser should
+        # always be treated as Owner-equivalent.
+        if self.is_superuser:
+            self.role = self.Role.OWNER
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return f"{self.username} ({self.get_role_display()})"
