@@ -14,6 +14,23 @@ SECRET_KEY = config("SECRET_KEY")
 DEBUG = config("DEBUG", default=False, cast=bool)
 ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="localhost,127.0.0.1", cast=Csv())
 
+# --- Error monitoring (Sentry) ---------------------------------------------
+# Only active when SENTRY_DSN is actually set, so local dev stays silent by
+# default. The `environment` tag still distinguishes dev from prod in the
+# Sentry dashboard in case someone sets SENTRY_DSN locally to test.
+SENTRY_DSN = config("SENTRY_DSN", default="")
+if SENTRY_DSN:
+    import sentry_sdk
+    from sentry_sdk.integrations.django import DjangoIntegration
+
+    sentry_sdk.init(
+        dsn=SENTRY_DSN,
+        integrations=[DjangoIntegration()],
+        environment="production" if not DEBUG else "development",
+        traces_sample_rate=0.0,  # error tracking only, no performance tracing
+        send_default_pii=False,  # don't ship request headers/IPs to a third party
+    )
+
 # --- Applications ---------------------------------------------------------
 INSTALLED_APPS = [
     "django.contrib.admin",
