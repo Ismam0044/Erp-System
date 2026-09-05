@@ -14,10 +14,11 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-RUN adduser --disabled-password --no-create-home --gecos "" appuser \
+RUN adduser --disabled-password --gecos "" appuser \
     && mkdir -p /app/staticfiles \
     && chown -R appuser:appuser /app
 USER appuser
+ENV HOME=/home/appuser
 
 EXPOSE 8000
 
