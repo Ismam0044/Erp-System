@@ -1,8 +1,7 @@
-from datetime import date
-
 from django.contrib.auth.decorators import login_required
 from django.db.models import F, Sum
 from django.shortcuts import render
+from django.utils import timezone
 
 from core.models import Warehouse
 from inventory.models import Stock
@@ -59,7 +58,7 @@ def dues(request):
 def daily_sales(request):
     warehouses = Warehouse.objects.filter(is_active=True)
     warehouse_id = request.GET.get("warehouse_id")
-    the_date = request.GET.get("date") or date.today().isoformat()
+    the_date = request.GET.get("date") or timezone.localdate().isoformat()
 
     invoices = SalesInvoice.objects.filter(date=the_date).select_related("warehouse", "party")
     if warehouse_id:

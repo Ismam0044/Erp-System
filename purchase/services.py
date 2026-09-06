@@ -9,9 +9,9 @@ from .models import PurchaseInvoice, PurchaseInvoiceItem
 
 
 def generate_invoice_no(warehouse):
-    today = timezone.now().strftime("%Y%m%d")
-    count = PurchaseInvoice.objects.filter(date=timezone.now().date(), warehouse=warehouse).count() + 1
-    return f"PI-{warehouse.id}-{today}-{count:04d}"
+    today = timezone.localdate()
+    count = PurchaseInvoice.objects.filter(date=today, warehouse=warehouse).count() + 1
+    return f"PI-{warehouse.id}-{today:%Y%m%d}-{count:04d}"
 
 
 @transaction.atomic
@@ -26,7 +26,7 @@ def complete_purchase(*, warehouse, supplier, paid_amount, discount, cart, user,
         invoice_no=generate_invoice_no(warehouse),
         warehouse=warehouse,
         supplier=supplier,
-        date=timezone.now().date(),
+        date=timezone.localdate(),
         subtotal=subtotal,
         discount=discount,
         total=total,

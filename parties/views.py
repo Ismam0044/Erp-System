@@ -72,11 +72,12 @@ def record_transaction(request, pk):
         messages.error(request, "No warehouse available for this user.")
         return redirect("parties:detail", pk=pk)
 
+    today = timezone.localdate()
     Voucher.objects.create(
         voucher_type=voucher_type,
         warehouse=warehouse,
         party=party,
-        date=timezone.now().date(),
+        date=today,
         amount=amount,
         mode=mode,
         description=f"{voucher_type.title()} against {party.name}",
@@ -84,7 +85,7 @@ def record_transaction(request, pk):
     )
     LedgerEntry.objects.create(
         party=party,
-        date=timezone.now().date(),
+        date=today,
         entry_type=LedgerEntry.EntryType.CREDIT if voucher_type == Voucher.VoucherType.RECEIPT else LedgerEntry.EntryType.DEBIT,
         amount=amount,
         reference=f"{voucher_type}-{timezone.now():%Y%m%d%H%M%S}",

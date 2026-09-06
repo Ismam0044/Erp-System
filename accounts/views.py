@@ -1,10 +1,11 @@
-from datetime import date, timedelta
+from datetime import timedelta
 from decimal import Decimal, InvalidOperation
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q, Sum
 from django.shortcuts import redirect, render
+from django.utils import timezone
 from django.views.decorators.http import require_POST
 
 from core.models import Warehouse
@@ -23,8 +24,9 @@ def _accessible_warehouses(user):
 def cash_book(request):
     warehouses = _accessible_warehouses(request.user)
     warehouse_id = request.GET.get("warehouse_id")
-    date_from = request.GET.get("date_from") or (date.today() - timedelta(days=30)).isoformat()
-    date_to = request.GET.get("date_to") or date.today().isoformat()
+    today = timezone.localdate()
+    date_from = request.GET.get("date_from") or (today - timedelta(days=30)).isoformat()
+    date_to = request.GET.get("date_to") or today.isoformat()
 
     entries = CashBookEntry.objects.filter(date__gte=date_from, date__lte=date_to).select_related("warehouse", "created_by")
     if warehouse_id:
@@ -67,7 +69,7 @@ def add_cash_entry(request):
 
     CashBookEntry.objects.create(
         warehouse=warehouse,
-        date=request.POST.get("date") or date.today(),
+        date=request.POST.get("date") or timezone.localdate(),
         entry_type=request.POST.get("entry_type", CashBookEntry.EntryType.OUT),
         amount=amount,
         category=request.POST.get("category", ""),

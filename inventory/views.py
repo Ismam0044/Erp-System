@@ -1,9 +1,9 @@
-from datetime import date
 from decimal import Decimal, InvalidOperation
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
+from django.utils import timezone
 from django.views.decorators.http import require_POST
 
 from core.cart import SessionCart
@@ -105,7 +105,7 @@ def checkout(request):
 
     try:
         transfer = complete_transfer(
-            from_warehouse=from_warehouse, to_warehouse=to_warehouse, date=date.today(),
+            from_warehouse=from_warehouse, to_warehouse=to_warehouse, date=timezone.localdate(),
             lines=lines, user=request.user, note=request.POST.get("note", ""),
         )
     except (InsufficientStockError, ValueError) as exc:

@@ -13,9 +13,9 @@ class InsufficientStockError(Exception):
 
 
 def generate_invoice_no(warehouse):
-    today = timezone.now().strftime("%Y%m%d")
-    count = SalesInvoice.objects.filter(date=timezone.now().date(), warehouse=warehouse).count() + 1
-    return f"SI-{warehouse.id}-{today}-{count:04d}"
+    today = timezone.localdate()
+    count = SalesInvoice.objects.filter(date=today, warehouse=warehouse).count() + 1
+    return f"SI-{warehouse.id}-{today:%Y%m%d}-{count:04d}"
 
 
 @transaction.atomic
@@ -30,7 +30,7 @@ def complete_sale(*, warehouse, party, payment_type, paid_amount, discount, cart
         invoice_no=generate_invoice_no(warehouse),
         warehouse=warehouse,
         party=party,
-        date=timezone.now().date(),
+        date=timezone.localdate(),
         payment_type=payment_type,
         subtotal=subtotal,
         discount=discount,
