@@ -98,13 +98,14 @@ WSGI_APPLICATION = "config.wsgi.application"
 DATABASES = {
     "default": dj_database_url.config(
         default=config("DATABASE_URL"),
-        # Neon's serverless Postgres can silently close idle connections on its
-        # end; holding long-lived connections here then causes "SSL connection
-        # has been closed unexpectedly" the next time Django tries to reuse
-        # one. We're already on Neon's pooled endpoint (built for frequent
-        # short connections), so don't hold connections open at all, and add
-        # a health check as a safety net in case this ever changes.
-        conn_max_age=0,
+        # Neon's serverless Postgres can silently close idle connections on
+        # its end. conn_max_age=0 "fixed" that by never reusing a connection,
+        # but that meant a fresh TLS handshake to Neon (cross-region, slow)
+        # on every single request - the real cost was reconnecting, not
+        # reusing. Keep connections alive for a minute so most requests reuse
+        # one, and lean on conn_health_checks to detect + transparently
+        # reconnect if Neon closed it before that.
+        conn_max_age=60,
         conn_health_checks=True,
         ssl_require=config("DB_SSL_REQUIRE", default=not DEBUG, cast=bool),
     )
