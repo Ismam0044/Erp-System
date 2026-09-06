@@ -1,4 +1,4 @@
-# ERP System
+# A2i ERP
 
 A Django-based ERP for a multi-warehouse supershop: inventory, sales/POS, purchase, party (customer/supplier) ledgers, and cash book/vouchers.
 
