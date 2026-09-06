@@ -22,10 +22,10 @@ def _accessible_warehouses(user):
 @login_required
 def party_list(request):
     q = request.GET.get("q", "").strip()
-    parties = Party.objects.filter(is_active=True)
+    parties = Party.objects.filter(is_active=True).with_balance()
     if q:
         parties = parties.filter(name__icontains=q)
-    rows = [{"party": p, "balance": p.get_balance()} for p in parties.order_by("name")]
+    rows = [{"party": p, "balance": p.balance} for p in parties.order_by("name")]
     return render(request, "parties/list.html", {"rows": rows, "q": q})
 
 

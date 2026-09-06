@@ -1,7 +1,7 @@
 from datetime import date
 
 from django.contrib.auth.decorators import login_required
-from django.db.models import Sum
+from django.db.models import F, Sum
 from django.shortcuts import render
 
 from core.models import Warehouse
@@ -20,12 +20,13 @@ def low_stock(request):
     warehouses = Warehouse.objects.filter(is_active=True)
     warehouse_id = request.GET.get("warehouse_id")
 
-    stocks = Stock.objects.select_related("item", "warehouse", "item__unit")
+    stocks = Stock.objects.select_related("item", "warehouse", "item__unit").filter(
+        quantity__lte=F("item__reorder_level")
+    ).order_by("quantity")
     if warehouse_id:
         stocks = stocks.filter(warehouse_id=warehouse_id)
 
-    low_items = [s for s in stocks if s.quantity <= s.item.reorder_level]
-    low_items.sort(key=lambda s: s.quantity)
+    low_items = list(stocks)
 
     return render(request, "reports/low_stock.html", {
         "warehouses": warehouses,
@@ -36,8 +37,8 @@ def low_stock(request):
 
 @login_required
 def dues(request):
-    parties = Party.objects.filter(is_active=True)
-    rows = [{"party": p, "balance": p.get_balance()} for p in parties]
+    parties = Party.objects.filter(is_active=True).with_balance()
+    rows = [{"party": p, "balance": p.balance} for p in parties]
     rows = [r for r in rows if r["balance"] != 0]
 
     receivables = sorted([r for r in rows if r["balance"] > 0], key=lambda r: -r["balance"])
