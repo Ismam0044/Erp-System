@@ -4,7 +4,7 @@
 <div class="pos-layout">
     <div>
         <div class="d-flex gap-2 align-items-center item-search-box">
-            <select id="warehouse-select" name="warehouse_id" class="form-select" style="max-width: 220px;"
+            <select id="warehouse-select" name="warehouse_id" class="form-select" style="max-width: 220px;" aria-label="Warehouse"
                     hx-get="{% url 'purchase:set_warehouse' %}"
                     hx-target="#item-grid"
                     hx-trigger="change">
@@ -12,7 +12,7 @@
                     <option value="{{ w.id }}" {% if warehouse and w.id == warehouse.id %}selected{% endif %}>{{ w.name }}</option>
                 {% endfor %}
             </select>
-            <input type="text" name="q" class="form-control" placeholder="Search item by name or code..."
+            <input type="text" name="q" class="form-control" placeholder="Search item by name or code..." aria-label="Search item by name or code"
                    hx-get="{% url 'purchase:item_search' %}"
                    hx-trigger="keyup changed delay:300ms, load"
                    hx-target="#item-grid"

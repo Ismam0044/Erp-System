@@ -10,7 +10,7 @@ from core.cart import SessionCart
 from core.models import Warehouse
 from core.utils import resolve_warehouse
 
-from .models import Item, Stock, StockTransfer
+from .models import Item, Stock
 from .services import InsufficientStockError, complete_transfer
 
 CART_SESSION_KEY = "transfer_cart"

@@ -4,7 +4,7 @@
 <div class="pos-layout">
     <div>
         <div class="d-flex gap-2 align-items-center item-search-box">
-            <select id="from-warehouse-select" name="from_warehouse_id" class="form-select" style="max-width: 220px;"
+            <select id="from-warehouse-select" name="from_warehouse_id" class="form-select" style="max-width: 220px;" aria-label="Source warehouse"
                     hx-get="{% url 'inventory:set_from_warehouse' %}"
                     hx-target="#item-grid"
                     hx-trigger="change">
@@ -12,7 +12,7 @@
                     <option value="{{ w.id }}" {% if from_warehouse and w.id == from_warehouse.id %}selected{% endif %}>{{ w.name }}</option>
                 {% endfor %}
             </select>
-            <input type="text" name="q" class="form-control" placeholder="Search item to transfer..."
+            <input type="text" name="q" class="form-control" placeholder="Search item to transfer..." aria-label="Search item to transfer"
                    hx-get="{% url 'inventory:item_search' %}"
                    hx-trigger="keyup changed delay:300ms, load"
                    hx-target="#item-grid"
@@ -31,8 +31,8 @@
             {% csrf_token %}
             <input type="hidden" name="from_warehouse_id" value="{{ from_warehouse.id }}">
             <div class="px-3 pt-2">
-                <label class="form-label">To Warehouse</label>
-                <select name="to_warehouse_id" class="form-select form-select-sm mb-2" required>
+                <label class="form-label" for="to-warehouse-select">To Warehouse</label>
+                <select id="to-warehouse-select" name="to_warehouse_id" class="form-select form-select-sm mb-2" required>
                     <option value="">Select destination...</option>
                     {% for w in warehouses %}
                         {% if not from_warehouse or w.id != from_warehouse.id %}
@@ -40,8 +40,8 @@
                         {% endif %}
                     {% endfor %}
                 </select>
-                <label class="form-label">Note</label>
-                <input type="text" name="note" class="form-control form-control-sm mb-3" placeholder="Optional note">
+                <label class="form-label" for="transfer-note">Note</label>
+                <input type="text" id="transfer-note" name="note" class="form-control form-control-sm mb-3" placeholder="Optional note">
             </div>
             <div class="px-3 pb-3">
                 <button type="submit" class="btn btn-primary w-100">

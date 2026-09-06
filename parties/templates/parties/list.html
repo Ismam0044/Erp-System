@@ -3,8 +3,8 @@
 {% block content %}
 <div class="card-surface p-3 mb-3">
     <form method="get" class="d-flex gap-2">
-        <input type="text" name="q" class="form-control" placeholder="Search by name..." value="{{ q }}">
-        <button class="btn btn-primary"><i class="bi bi-search"></i></button>
+        <input type="text" name="q" class="form-control" placeholder="Search by name..." aria-label="Search parties by name" value="{{ q }}">
+        <button type="submit" class="btn btn-primary" aria-label="Search"><i class="bi bi-search"></i></button>
     </form>
 </div>
 

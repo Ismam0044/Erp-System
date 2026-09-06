@@ -45,19 +45,19 @@
             <form method="post" action="{% url 'parties:record_transaction' party.pk %}">
                 {% csrf_token %}
                 <div class="mb-2">
-                    <label class="form-label">Type</label>
-                    <select name="voucher_type" class="form-select form-select-sm">
+                    <label class="form-label" for="txn-type">Type</label>
+                    <select id="txn-type" name="voucher_type" class="form-select form-select-sm">
                         <option value="RECEIPT">Collect Due (from party)</option>
                         <option value="PAYMENT">Pay Out (to party)</option>
                     </select>
                 </div>
                 <div class="mb-2">
-                    <label class="form-label">Amount</label>
-                    <input type="number" step="0.01" min="0.01" name="amount" class="form-control form-control-sm" required>
+                    <label class="form-label" for="txn-amount">Amount</label>
+                    <input type="number" step="0.01" min="0.01" id="txn-amount" name="amount" class="form-control form-control-sm" required>
                 </div>
                 <div class="mb-2">
-                    <label class="form-label">Mode</label>
-                    <select name="mode" class="form-select form-select-sm">
+                    <label class="form-label" for="txn-mode">Mode</label>
+                    <select id="txn-mode" name="mode" class="form-select form-select-sm">
                         <option value="CASH">Cash</option>
                         <option value="BANK">Bank</option>
                         <option value="BKASH">bKash</option>
@@ -65,8 +65,8 @@
                     </select>
                 </div>
                 <div class="mb-3">
-                    <label class="form-label">Warehouse</label>
-                    <select name="warehouse_id" class="form-select form-select-sm">
+                    <label class="form-label" for="txn-warehouse">Warehouse</label>
+                    <select id="txn-warehouse" name="warehouse_id" class="form-select form-select-sm">
                         {% for w in warehouses %}<option value="{{ w.id }}">{{ w.name }}</option>{% endfor %}
                     </select>
                 </div>

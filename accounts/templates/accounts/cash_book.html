@@ -27,8 +27,8 @@
         <div class="card-surface p-3 mb-3">
             <form method="get" class="row g-2 align-items-end">
                 <div class="col-auto">
-                    <label class="form-label">Warehouse</label>
-                    <select name="warehouse_id" class="form-select form-select-sm">
+                    <label class="form-label" for="filter-warehouse">Warehouse</label>
+                    <select id="filter-warehouse" name="warehouse_id" class="form-select form-select-sm">
                         <option value="">All</option>
                         {% for w in warehouses %}
                             <option value="{{ w.id }}" {% if selected_warehouse_id == w.id|stringformat:"s" %}selected{% endif %}>{{ w.name }}</option>
@@ -36,12 +36,12 @@
                     </select>
                 </div>
                 <div class="col-auto">
-                    <label class="form-label">From</label>
-                    <input type="date" name="date_from" class="form-control form-control-sm" value="{{ date_from }}">
+                    <label class="form-label" for="filter-date-from">From</label>
+                    <input type="date" id="filter-date-from" name="date_from" class="form-control form-control-sm" value="{{ date_from }}">
                 </div>
                 <div class="col-auto">
-                    <label class="form-label">To</label>
-                    <input type="date" name="date_to" class="form-control form-control-sm" value="{{ date_to }}">
+                    <label class="form-label" for="filter-date-to">To</label>
+                    <input type="date" id="filter-date-to" name="date_to" class="form-control form-control-sm" value="{{ date_to }}">
                 </div>
                 <div class="col-auto">
                     <button class="btn btn-sm btn-primary">Filter</button>
@@ -78,33 +78,33 @@
             <form method="post" action="{% url 'accounts:add_cash_entry' %}">
                 {% csrf_token %}
                 <div class="mb-2">
-                    <label class="form-label">Warehouse</label>
-                    <select name="warehouse_id" class="form-select form-select-sm">
+                    <label class="form-label" for="entry-warehouse">Warehouse</label>
+                    <select id="entry-warehouse" name="warehouse_id" class="form-select form-select-sm">
                         {% for w in warehouses %}<option value="{{ w.id }}">{{ w.name }}</option>{% endfor %}
                     </select>
                 </div>
                 <div class="mb-2">
-                    <label class="form-label">Type</label>
-                    <select name="entry_type" class="form-select form-select-sm">
+                    <label class="form-label" for="entry-type">Type</label>
+                    <select id="entry-type" name="entry_type" class="form-select form-select-sm">
                         <option value="OUT">Cash Out (expense)</option>
                         <option value="IN">Cash In (other income)</option>
                     </select>
                 </div>
                 <div class="mb-2">
-                    <label class="form-label">Amount</label>
-                    <input type="number" step="0.01" min="0.01" name="amount" class="form-control form-control-sm" required>
+                    <label class="form-label" for="entry-amount">Amount</label>
+                    <input type="number" step="0.01" min="0.01" id="entry-amount" name="amount" class="form-control form-control-sm" required>
                 </div>
                 <div class="mb-2">
-                    <label class="form-label">Category</label>
-                    <input type="text" name="category" class="form-control form-control-sm" placeholder="e.g. Rent, Utilities">
+                    <label class="form-label" for="entry-category">Category</label>
+                    <input type="text" id="entry-category" name="category" class="form-control form-control-sm" placeholder="e.g. Rent, Utilities">
                 </div>
                 <div class="mb-2">
-                    <label class="form-label">Date</label>
-                    <input type="date" name="date" class="form-control form-control-sm" value="{{ date_to }}">
+                    <label class="form-label" for="entry-date">Date</label>
+                    <input type="date" id="entry-date" name="date" class="form-control form-control-sm" value="{{ date_to }}">
                 </div>
                 <div class="mb-3">
-                    <label class="form-label">Description</label>
-                    <input type="text" name="description" class="form-control form-control-sm">
+                    <label class="form-label" for="entry-description">Description</label>
+                    <input type="text" id="entry-description" name="description" class="form-control form-control-sm">
                 </div>
                 <button type="submit" class="btn btn-primary btn-sm w-100">Save Entry</button>
             </form>

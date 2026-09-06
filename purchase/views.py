@@ -8,7 +8,7 @@ from django.views.decorators.http import require_POST
 from core.cart import SessionCart
 from core.models import Warehouse
 from core.utils import resolve_warehouse
-from inventory.models import Item, Stock
+from inventory.models import Item
 from parties.models import Party
 
 from .models import PurchaseInvoice

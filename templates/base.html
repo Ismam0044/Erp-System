@@ -77,7 +77,7 @@
                     </span>
                     <form method="post" action="{% url 'logout' %}" class="m-0">
                         {% csrf_token %}
-                        <button type="submit" class="btn btn-sm btn-outline-secondary">
+                        <button type="submit" class="btn btn-sm btn-outline-secondary" aria-label="Log out">
                             <i class="bi bi-box-arrow-right"></i> <span class="hide-mobile-label">Log out</span>
                         </button>
                     </form>
