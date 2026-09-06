@@ -12,6 +12,7 @@
     <div class="mb-3">
         <strong>Customer:</strong> {{ invoice.party.name|default:"Walk-in / Cash" }}
     </div>
+    <div class="table-responsive">
     <table class="table table-clean">
         <thead><tr><th>Item</th><th class="text-end">Qty</th><th class="text-end">Price</th><th class="text-end">Total</th></tr></thead>
         <tbody>
@@ -25,6 +26,7 @@
         {% endfor %}
         </tbody>
     </table>
+    </div>
     <div class="cart-total-row"><span>Subtotal</span><span>৳{{ invoice.subtotal }}</span></div>
     <div class="cart-total-row"><span>Discount</span><span>৳{{ invoice.discount }}</span></div>
     <div class="cart-total-row grand"><span>Total</span><span>৳{{ invoice.total }}</span></div>

@@ -16,7 +16,8 @@
 <body>
     {% if user.is_authenticated %}
     <div class="app-shell">
-        <aside class="sidebar">
+        <div class="sidebar-backdrop" id="sidebar-backdrop"></div>
+        <aside class="sidebar" id="sidebar">
             <div class="sidebar-brand">
                 <span class="badge-dot"><i class="bi bi-shop"></i></span>
                 Troyee Lite
@@ -62,17 +63,22 @@
 
         <div class="main-col">
             <header class="topbar">
-                <h1>{% block page_title %}{% endblock %}</h1>
+                <div class="d-flex align-items-center gap-2">
+                    <button type="button" class="menu-toggle" id="menu-toggle" aria-label="Toggle menu">
+                        <i class="bi bi-list"></i>
+                    </button>
+                    <h1>{% block page_title %}{% endblock %}</h1>
+                </div>
                 <div class="d-flex align-items-center gap-3">
                     <span class="text-muted small">
                         <i class="bi bi-person-circle"></i>
-                        {{ user.get_full_name|default:user.username }}
+                        <span class="hide-mobile-label">{{ user.get_full_name|default:user.username }}</span>
                         <span class="badge badge-soft-primary ms-1">{{ user.get_role_display }}</span>
                     </span>
                     <form method="post" action="{% url 'logout' %}" class="m-0">
                         {% csrf_token %}
                         <button type="submit" class="btn btn-sm btn-outline-secondary">
-                            <i class="bi bi-box-arrow-right"></i> Log out
+                            <i class="bi bi-box-arrow-right"></i> <span class="hide-mobile-label">Log out</span>
                         </button>
                     </form>
                 </div>
@@ -90,5 +96,30 @@
     {% else %}
         {% block auth_content %}{% endblock %}
     {% endif %}
+    <script>
+        (function () {
+            var sidebar = document.getElementById('sidebar');
+            var toggle = document.getElementById('menu-toggle');
+            var backdrop = document.getElementById('sidebar-backdrop');
+            if (!sidebar || !toggle || !backdrop) return;
+
+            function closeMenu() {
+                sidebar.classList.remove('is-open');
+                document.body.classList.remove('sidebar-open');
+            }
+            function openMenu() {
+                sidebar.classList.add('is-open');
+                document.body.classList.add('sidebar-open');
+            }
+
+            toggle.addEventListener('click', function () {
+                sidebar.classList.contains('is-open') ? closeMenu() : openMenu();
+            });
+            backdrop.addEventListener('click', closeMenu);
+            sidebar.querySelectorAll('a').forEach(function (link) {
+                link.addEventListener('click', closeMenu);
+            });
+        })();
+    </script>
 </body>
 </html>
